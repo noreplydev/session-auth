@@ -1,6 +1,6 @@
 import express from 'express'
 import * as Dotenv from 'dotenv'
-import { authRouter } from './routes/login.js'
+import { authRouter } from './routes/auth.js'
 
 Dotenv.config() // set all process.env variables
 const app = express()
@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
   res.json({ status: 'server alive' })
 })
 
-app.use('/login', authRouter)
+app.use('/', authRouter)
 
 app.listen(3000, () => {
   console.log('Server running on http://localhost:3000')
