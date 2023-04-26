@@ -1,6 +1,33 @@
 import { nanoid } from 'nanoid'
 import { connection } from './connect.js'
 
+// create new session with the given id
+async function createSession (id) {
+  const postgresInstance = connection()
+
+  if (!postgresInstance) { // if can not connect to the database return undefined
+    return undefined
+  }
+
+  const query = `
+    INSERT INTO sessions (id)
+    VALUES ('${id}')
+    RETURNING id
+  `
+
+  const sessionID = await postgresInstance.query(query)
+    .then(res => {
+      console.log(res.rows[0])
+      return res.rows[0].id // return the session id
+    })
+    .catch((err) => {
+      console.error('An error ocurred while getting a session.', err)
+      return undefined // internal server error
+    })
+
+  return sessionID
+}
+
 // iterCounter is a counter to limit the iterations
 // of the recursive function
 export async function generateSessionId (iterCounter) {
@@ -47,7 +74,7 @@ export async function getSession (sessionId) {
   return session
 }
 
-async function createSession (id) {
+export async function removeSession (sessionID) {
   const postgresInstance = connection()
 
   if (!postgresInstance) { // if can not connect to the database return undefined
@@ -55,20 +82,21 @@ async function createSession (id) {
   }
 
   const query = `
-    INSERT INTO sessions (id)
-    VALUES ('${id}')
-    RETURNING id
+    DELETE FROM sessions
+    WHERE id = '${sessionID}'
+    RETURNING *
   `
 
-  const sessionID = await postgresInstance.query(query)
+  const removedSession = await postgresInstance.query(query)
     .then(res => {
-      console.log(res.rows[0])
-      return res.rows[0].id // return the session id
+      // return the removed session or null if there was no session with
+      // that id
+      return res.rows[0] || null
     })
     .catch((err) => {
-      console.error('An error ocurred while getting a session.', err)
+      console.err('An error ocurred while getting a session.', err)
       return undefined // internal server error
     })
 
-  return sessionID
+  return removeSession
 }
