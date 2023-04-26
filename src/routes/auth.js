@@ -1,6 +1,7 @@
 import { Router } from 'express'
-import { createUser, getUser } from '../db/connect.js'
+import { createUser, getUser } from '../db/auth.js'
 import { comparePasswords, hashPassword } from '../crypto/passwords.js'
+import { generateSessionId } from '../db/session.js'
 
 export const authRouter = Router()
 
@@ -24,17 +25,23 @@ authRouter.post('/login', async (req, res) => {
     return res.json({ 400: 'Bad request. User does not exists' })
   }
 
-  await comparePasswords(password, user.password)
-
   // if the user types bad password
   if (!await comparePasswords(password, user.password)) {
     res.status(401)
     return res.json({ 401: 'Unauthorized. Bad password' })
   }
 
-  // send the session cookie
+  // generate the session cookie
+  const sessionID = await generateSessionId(0)
 
-  res.json({ user })
+  // 500 Can't connect to the db
+  if (sessionID === undefined) {
+    return res.json({ 500: 'Internal server error' })
+  }
+
+  // return the session cookie
+  res.cookie('sessionID', sessionID)
+  res.json({ 200: 'OK' })
 })
 
 authRouter.post('/register', async (req, res) => {
@@ -42,15 +49,7 @@ authRouter.post('/register', async (req, res) => {
 
   if (!username || !name || !description || !password) {
     res.status(401)
-    return res.json({ 401: 'Bad request. Required field are empty' })
-  }
-
-  // password hashing
-  const hash = await hashPassword(password)
-
-  if (!hash) {
-    res.status(500)
-    res.json({ 500: 'Internal server error' })
+    return res.json({ 401: 'Bad request. Required fields are empty' })
   }
 
   // check if the username already exists
@@ -66,6 +65,14 @@ authRouter.post('/register', async (req, res) => {
   if (userExists) {
     res.status(400)
     return res.json({ 400: 'Bad request. Username Already exists' })
+  }
+
+  // password hashing
+  const hash = await hashPassword(password)
+
+  if (!hash) {
+    res.status(500)
+    res.json({ 500: 'Internal server error' })
   }
 
   const user = await createUser({ username, name, description, hash })
