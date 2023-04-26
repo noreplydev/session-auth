@@ -9,3 +9,11 @@ CREATE TABLE users (
   description TEXT NOT NULL
 )
 ```
+
+## Table: `sessions`
+```
+CREATE TABLE sessions (
+  id TEXT PRIMARY KEY NOT NULL UNIQUE, 
+  cart TEXT[], 
+)
+```
