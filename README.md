@@ -17,3 +17,12 @@ CREATE TABLE sessions (
   cart TEXT[], 
 )
 ```
+
+## Table: `products`
+```
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY, 
+  product_name TEXT NOT NULL, 
+  product_description TEXT NOT NULL
+)
+```
