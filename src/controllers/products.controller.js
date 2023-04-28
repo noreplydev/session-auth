@@ -10,5 +10,5 @@ export const list = async (req, res) => {
   }
 
   res.status(200)
-  res.json(data)
+  res.json({ data })
 }
