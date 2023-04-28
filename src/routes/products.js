@@ -1,9 +1,7 @@
 import { Router } from 'express'
-import { _400 } from '../lib/httpError.js'
-import { connection } from '../db/connect.js'
+import * as productsController from '../controllers/products.controller.js'
 
 export const productsRouter = Router()
 
-productsRouter.get('/', async (req, res) => {
-
-})
+// get all products
+productsRouter.get('/', productsController.list)
