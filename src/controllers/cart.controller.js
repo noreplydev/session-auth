@@ -20,7 +20,7 @@ export const get = async (req, res) => {
 
   delete cartProducts.id
   res.status(200)
-  res.json({ products: cartProducts })
+  res.json({ products: cartProducts.cart || [] }) // return the cart or empty array
 }
 
 export const add = async (req, res) => {
