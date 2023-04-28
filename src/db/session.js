@@ -64,6 +64,7 @@ export async function getSession (sessionId) {
 
   const session = await postgresInstance.query(query)
     .then(res => {
+      console.log(res.rows)
       return res.rows[0] || null // return the match sessionID or null if it's free
     })
     .catch((err) => {
