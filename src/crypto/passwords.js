@@ -13,7 +13,7 @@ export async function hashPassword (password) {
       return await bcrypt.hash(password, salt)
         .then(hash => hash)
         .catch((err) => {
-          console.err('Error generating password hash', err)
+          console.error('Error generating password hash', err)
           return null
         })
     })

@@ -68,7 +68,7 @@ export async function getSession (sessionId) {
       return res.rows[0] || null // return the match sessionID or null if it's free
     })
     .catch((err) => {
-      console.err('An error ocurred while getting a session.', err)
+      console.error('An error ocurred while getting a session.', err)
       return undefined // internal server error
     })
 
@@ -95,9 +95,9 @@ export async function removeSession (sessionID) {
       return res.rows[0] || null
     })
     .catch((err) => {
-      console.err('An error ocurred while getting a session.', err)
+      console.error('An error ocurred while getting a session.', err)
       return undefined // internal server error
     })
 
-  return removeSession
+  return removedSession
 }

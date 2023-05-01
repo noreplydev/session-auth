@@ -2,6 +2,7 @@ import { createUser, getUser } from '../db/auth.js'
 import { comparePasswords, hashPassword } from '../crypto/passwords.js'
 import { generateSessionId, removeSession } from '../db/session.js'
 import { _400, _401, _500 } from '../lib/httpError.js'
+import { createSession, secondsToMs, sessionExists } from 'alive-sessions'
 
 export const register = async (req, res) => {
   const { username, name, description, password } = req.body
@@ -73,6 +74,16 @@ export const login = async (req, res) => {
   if (sessionID === undefined) {
     return _500(res)
   }
+
+  // create and append the session to the sessions hash map in memory
+  const expireMs = secondsToMs(15)
+  const action = () => removeSession(sessionID)
+
+  createSession({
+    sessionID,
+    expireMs,
+    action
+  })
 
   // return the session cookie
   res.cookie('sessionID', sessionID)

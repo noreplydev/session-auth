@@ -19,7 +19,7 @@ export async function createUser ({ username, name, description, hash }) {
       return res.rows[0] // return the user or null
     })
     .catch((err) => {
-      console.err('An error ocurred while searching for a user.', err)
+      console.error('An error ocurred while searching for a user.', err)
       return undefined // internal server error
     })
 
@@ -45,7 +45,7 @@ export async function getUser (username) {
       return res.rows[0] || null // return the user or null
     })
     .catch((err) => {
-      console.err('An error ocurred while searching for a user.', err)
+      console.error('An error ocurred while searching for a user.', err)
       return undefined // internal server error
     })
 

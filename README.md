@@ -6,7 +6,8 @@ CREATE TABLE users (
   id SERIAL, 
   username VARCHAR(50) UNIQUE, 
   name TEXT NOT NULL, 
-  description TEXT NOT NULL
+  description TEXT NOT NULL, 
+  password TEXT NOT NULL
 )
 ```
 
@@ -14,7 +15,7 @@ CREATE TABLE users (
 ```
 CREATE TABLE sessions (
   id TEXT PRIMARY KEY NOT NULL UNIQUE, 
-  cart TEXT[], 
+  cart TEXT[]
 )
 ```
 
