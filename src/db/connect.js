@@ -10,9 +10,6 @@ export function connection () {
   })
 
   postgresClient.connect()
-    .then(() => {
-      console.log('Successfully connected to postgres instance')
-    })
     .catch(() => {
       console.log('Can not connect to the postgres instance')
       return null

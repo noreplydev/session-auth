@@ -24,7 +24,6 @@ export const addProduct = async (sessionID, productID) => {
 
   const updatedCart = await postgresInstance.query(query)
     .then(res => {
-      console.log(res.rows[0].cart)
       return res.rows
     })
     .catch(err => {
